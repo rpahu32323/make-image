@@ -8,6 +8,13 @@ fi
 
 # unmount the image
 print_header "Unmounting the ${IMAGE_NAME} image..."
+
+print_msg "Sync and sleep..."
+sync
+sleep 3
+
+print_msg "Unmount paritions and sleep..."
 umount -l image/boot
 umount -l image
-losetup -d ${LOOP_DEV}
+sleep 3
+
