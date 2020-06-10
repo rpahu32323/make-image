@@ -1,0 +1,38 @@
+#!/bin/bash -eu
+
+# update for arch differences
+dpkg-reconfigure qemu-user-static
+
+# mount the image
+print_header "Mounting the ${IMAGE_NAME} image..."
+LOOP_DEV=$(losetup --show -f ${IMAGE_NAME}.img)
+print_msg "Image device: ${LOOP_DEV}"
+
+# make partition nodes
+#    these don't get automatically updated
+#    in docker. create them if they don't
+#    already exist
+if [ ! -e ${LOOP_DEV}p1 ]
+then
+   print_msg "Creating device ${LOOP_DEV}p1"
+   mknod ${LOOP_DEV}p1 b 259 0
+else
+   print_msg "Device ${LOOP_DEV}p1 already exists, using it"
+fi
+if [ ! -e ${LOOP_DEV}p2 ]
+then
+   print_msg "Creating device ${LOOP_DEV}p2"
+   mknod ${LOOP_DEV}p2 b 259 0
+else
+   print_msg "Device ${LOOP_DEV}p2 already exists, using it"
+fi
+
+# mount the partitions
+mount ${LOOP_DEV}p2 image
+mount ${LOOP_DEV}p1 image/boot
+
+# disable preload
+if [ -e "${IMAGE_DIR}/etc/ld.so.preload" ]
+then
+   mv "${IMAGE_DIR}/etc/ld.so.preload" "${IMAGE_DIR}/etc/ld.so.preload.disabled"  
+fi

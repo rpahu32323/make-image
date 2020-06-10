@@ -1,0 +1,6 @@
+# no images
+*.img
+
+# no config
+config.*
+!config.example

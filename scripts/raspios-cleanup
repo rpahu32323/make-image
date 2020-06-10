@@ -1,0 +1,13 @@
+#!/bin/bash -eu
+
+# re-enable preload
+if [ -e "${IMAGE_DIR}/etc/ld.so.preload.disabled" ]
+then
+   mv "${IMAGE_DIR}/etc/ld.so.preload.disabled" "${IMAGE_DIR}/etc/ld.so.preload" 
+fi
+
+# unmount the image
+print_header "Unmounting the ${IMAGE_NAME} image..."
+umount -l image/boot
+umount -l image
+losetup -d ${LOOP_DEV}

@@ -1,0 +1,5 @@
+#
+# it appears that the default setting is unmanaged
+#    change to mananged when added
+#
+KERNEL=="usb0",ENV{DEVTYPE}=="gadget", ENV{NM_UNMANAGED}="0"

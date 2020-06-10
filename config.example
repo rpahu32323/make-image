@@ -1,0 +1,12 @@
+#
+# example config file for make-image
+#
+
+# image information
+IMAGE_NAME=my-image
+COPY_FROM=../2020-05-27-raspios-buster-armhf.img
+
+# add nmconnecton file for wireless
+ADD_WIRELESS=1
+WIRELESS_SSID=test-ssid
+WIRELESS_PSK=TestTestTest

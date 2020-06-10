@@ -1,0 +1,21 @@
+[connection]
+id=USB0 (gadget)
+uuid=8c53ff16-82cf-35b3-9a8d-43287f1a6767
+type=ethernet
+autoconnect-priority=-999
+interface-name=usb0
+permissions=
+timestamp=1589935576
+
+[ethernet]
+mac-address-blacklist=
+
+[ipv4]
+dns-search=
+method=auto
+
+[ipv6]
+addr-gen-mode=stable-privacy
+dns-search=
+ip6-privacy=0
+method=auto

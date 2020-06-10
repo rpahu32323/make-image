@@ -1,0 +1,27 @@
+#!/bin/bash -eu
+
+# updates specific to huegpi
+print_header "Raspberry Pi OS huegpi upates..."
+
+
+print_msg "Adding usb gedget support..."
+sed -i -e "s/rootwait/& modules-load=dwc2,g_ether/" ${IMAGE_DIR}/boot/cmdline.txt
+cat <<EOF >>${IMAGE_DIR}/boot/config.txt
+
+[all]
+# Enable ethernet over usb gadget
+dtoverlay=dwc2
+EOF
+cp files/85-usb-ethernet-gadget.rules ${IMAGE_DIR}/etc/udev/rules.d
+cp "files/USB0 (gadget).nmconnection" ${IMAGE_DIR}/etc/NetworkManager/system-connections
+
+print_msg "Disabling ipv6..."
+sed -i -e "s/$/ ipv6.disable=1/" ${IMAGE_DIR}/boot/cmdline.txt
+
+
+print_msg "Setting boot to console requiring login..."
+on_chroot <<EOF
+systemctl set-default multi-user.target
+ln -fs /lib/systemd/system/getty@.service /etc/systemd/system/getty.target.wants/getty@tty1.service
+rm /etc/systemd/system/getty@tty1.service.d/autologin.conf
+EOF

@@ -1,0 +1,54 @@
+#!/bin/bash -eu
+
+# move to working directory
+cd /make-image
+
+# source common routines
+source scripts/common
+
+
+update-cleanup()
+{
+   losetup -d ${LOOP_DEV}   
+}
+
+# clean up loop device on exit
+trap update-cleanup EXIT
+
+# check for good arguments
+if [ $# != 1 ]
+then
+   print_error "Invalid arguments"
+   print_msg   "   Usage update-image <ConfigFile>"
+   print_msg   "      <ConfigFile> - configuration file to use"
+   print_msg   ""
+   exit 1
+fi
+
+# source the config file
+CONFIG_FILE=$1
+source ${CONFIG_FILE}
+
+# make the mount ppint for th eimage
+IMAGE_DIR="image"
+mkdir ${IMAGE_DIR}
+
+# update the image
+case ${IMAGE_NAME} in
+
+   # raspios based
+   huegpi)
+      source scripts/raspios-prepare
+      source scripts/raspios-update-common
+      source scripts/raspios-update-${IMAGE_NAME}
+      source scripts/raspios-add-wireless
+      source scripts/raspios-cleanup
+      ;;
+
+   # oall others
+   *)
+      print_error "Invalid image name: ${IMAGE_NAME}"
+      exit 1
+      ;;
+
+esac

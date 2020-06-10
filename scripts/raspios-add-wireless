@@ -1,0 +1,17 @@
+#!/bin/bash -eu
+
+# updates specific to huegpi
+print_header "Raspberry Pi OS adding wireless connection (NetworkManager)..."
+
+
+# check to add
+if [ "${WIRELESS_ADD}" == "1" ]
+then
+
+   print_msg "Adding wireless connection..."
+   DESTINATION="${IMAGE_DIR}/etc/NetworkManager/system-connections/${WIRELESS_SSID}.nmconnection"
+   cp files/Wireless.nmconnection ${DESTINATION}
+   sed -i -e "s/ChangeMeSSID/${WIRELESS_SSID}/" ${DESTINATION}
+   sed -i -e "s/ChangeMePSK/${WIRELESS_PSK}/" ${DESTINATION}
+
+fi

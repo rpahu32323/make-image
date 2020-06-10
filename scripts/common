@@ -1,0 +1,48 @@
+# colored print
+print_header()
+{
+   echo -e -n "\n\e[32m$1\e[0m\n\n"
+}
+print_error()
+{
+   echo -e -n "\n\e[31mERROR: $1\e[0m\n\n"
+}
+print_msg()
+{
+   echo -e -n "$1\n"
+}
+
+export -f print_header
+export -f print_error
+export -f print_msg
+
+pause()
+{
+   read -p "Press any key to continue..."
+}
+export -f pause
+
+# taken from oi-gen: https://github.com/RPi-Distro/pi-gen
+on_chroot() {
+
+        if ! mount | grep -q "$(realpath "${IMAGE_DIR}"/proc)"; then
+                mount -t proc proc "${IMAGE_DIR}/proc"
+        fi
+
+        if ! mount | grep -q "$(realpath "${IMAGE_DIR}"/dev)"; then
+                mount --bind /dev "${IMAGE_DIR}/dev"
+        fi
+
+        if ! mount | grep -q "$(realpath "${IMAGE_DIR}"/dev/pts)"; then
+                mount --bind /dev/pts "${IMAGE_DIR}/dev/pts"
+        fi
+
+        if ! mount | grep -q "$(realpath "${IMAGE_DIR}"/sys)"; then
+                mount --bind /sys "${IMAGE_DIR}/sys"
+        fi
+
+        setarch linux32 capsh --drop=cap_setfcap "--chroot=${IMAGE_DIR}/" -- -e "$@"
+
+}
+export -f on_chroot
+

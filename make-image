@@ -1,0 +1,39 @@
+#!/bin/bash -eu
+
+# get common routines
+source scripts/common
+
+# check for good arguments
+if [ $# != 1 ]
+then
+   print_error "Invalid arguments"
+   print_msg   "   Usage make-image <ConfigFile>"
+   print_msg   "      <ConfigFile> - configuration file to use"
+   print_msg   ""
+   exit 1
+fi
+
+# get the config
+CONFIG_FILE=$1
+source ${CONFIG_FILE}
+
+# copy the image
+print_header "Creating initial image file..."
+echo -n "copy "
+cp -v ${COPY_FROM} ${IMAGE_NAME}.img
+
+# update the image
+print_header "Starting docker image..."
+docker build -t make-image .
+docker run \
+   --rm \
+   --privileged \
+   --mount type=bind,source=$(realpath scripts),target=/make-image/scripts \
+   --mount type=bind,source=$(realpath files),target=/make-image/files \
+   --mount type=bind,source=$(realpath "${IMAGE_NAME}.img"),target="/make-image/${IMAGE_NAME}.img" \
+   --mount type=bind,source=$(realpath "${CONFIG_FILE}"),target="/make-image/${CONFIG_FILE}" \
+   make-image \
+   bash -e -c "/make-image/scripts/update-image ${CONFIG_FILE}"
+
+# success
+print_header "Successfully completed"

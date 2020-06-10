@@ -1,0 +1,57 @@
+#!/bin/bash -eu
+
+# perform common updates
+print_header "Raspberry Pi OS common updates..."
+
+
+print_msg "Setting the locale to US..."
+LOCALE="en_US.UTF-8"
+LOCALE_LINE="$(grep "^$LOCALE " ${IMAGE_DIR}/usr/share/i18n/SUPPORTED)"
+ENCODING="$(echo $LOCALE_LINE | cut -f2 -d " ")"
+echo "$LOCALE $ENCODING" > ${IMAGE_DIR}/etc/locale.gen
+sed -i "s/^\s*LANG=\S*/LANG=$LOCALE/" ${IMAGE_DIR}/etc/default/locale
+on_chroot <<EOF
+dpkg-reconfigure -f noninteractive locales
+EOF
+
+
+print_msg "Setting US keyboard..."
+KEYMAP="us"
+sed -i ${IMAGE_DIR}/etc/default/keyboard -e "s/^XKBLAYOUT.*/XKBLAYOUT=\"$KEYMAP\"/"
+on_chroot <<EOF
+dpkg-reconfigure -f noninteractive keyboard-configuration
+EOF
+
+
+print_msg "Make python3 the defaulti..."
+on_chroot <<EOF
+update-alternatives --install /usr/bin/python python /usr/bin/python2 1
+update-alternatives --install /usr/bin/python python /usr/bin/python3 2
+EOF
+
+
+print_msg "Update current packages..."
+on_chroot <<EOF
+apt --yes update
+apt --yes full-upgrade
+EOF
+
+
+print_msg "Add additional packages..."
+on_chroot <<EOF
+apt --yes install tmux network-manager network-manager-gnome vim codeblocks
+EOF
+
+
+print_msg "Remove unneeded packages..."
+on_chroot <<EOF
+apt --yes remove openresolv dhcpcd5
+apt --yes autoremove
+EOF
+
+
+print_msg "Turn on ssh..."
+on_chroot <<EOF
+ssh-keygen -A && update-rc.d ssh enable
+EOF
+
