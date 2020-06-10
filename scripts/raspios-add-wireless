@@ -10,7 +10,7 @@ then
 
    print_msg "Adding wireless connection..."
    DESTINATION="${IMAGE_DIR}/etc/NetworkManager/system-connections/${WIRELESS_SSID}.nmconnection"
-   cp files/Wireless.nmconnection ${DESTINATION}
+   cp -v files/Wireless.nmconnection ${DESTINATION}
    sed -i -e "s/ChangeMeSSID/${WIRELESS_SSID}/" ${DESTINATION}
    sed -i -e "s/ChangeMePSK/${WIRELESS_PSK}/" ${DESTINATION}
 
