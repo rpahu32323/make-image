@@ -9,6 +9,7 @@ timestamp=1589935576
 
 [ethernet]
 mac-address-blacklist=
+cloned-mac-address=stable
 
 [ipv4]
 dns-search=
