@@ -54,4 +54,10 @@ print_msg "Turn on ssh..."
 on_chroot <<EOF
 ssh-keygen -A && update-rc.d ssh enable
 EOF
+ 
+
+print_msg "Update mime database..."
+on_chroot <<EOF
+update-mime-database /usr/share/mime/
+EOF
 
