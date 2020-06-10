@@ -36,4 +36,4 @@ docker run \
    bash -e -c "/make-image/scripts/update-image ${CONFIG_FILE}"
 
 # success
-print_header "Successfully completed"
+print_header "Process completed"
