@@ -8,5 +8,5 @@ COPY_FROM=../2020-05-27-raspios-buster-armhf.img
 
 # add nmconnecton file for wireless
 ADD_WIRELESS=1
-WIRELESS_SSID=test-ssid
-WIRELESS_PSK=TestTestTest
+WIRELESS_SSID_LIST=( test-ssid1 test-ssid2 )
+WIRELESS_PSK_LIST=( Test1Test1 Test2Test2 )

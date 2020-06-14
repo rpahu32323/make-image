@@ -8,10 +8,15 @@ print_header "Raspberry Pi OS adding wireless connection (NetworkManager)..."
 if [ "${WIRELESS_ADD}" == "1" ]
 then
 
-   print_msg "Adding wireless connection..."
-   DESTINATION="${IMAGE_DIR}/etc/NetworkManager/system-connections/${WIRELESS_SSID}.nmconnection"
-   cp -v files/Wireless.nmconnection ${DESTINATION}
-   sed -i -e "s/ChangeMeSSID/${WIRELESS_SSID}/" ${DESTINATION}
-   sed -i -e "s/ChangeMePSK/${WIRELESS_PSK}/" ${DESTINATION}
+   for i in ${!WIRELESS_SSID_LIST[@]}
+   do
+
+      print_msg "Adding wireless connection..."
+      DESTINATION="${IMAGE_DIR}/etc/NetworkManager/system-connections/${WIRELESS_SSID_LIST[$i]}.nmconnection"
+      cp -v files/Wireless.nmconnection ${DESTINATION}
+      sed -i -e "s/ChangeMeSSID/${WIRELESS_SSID_LIST[$i]}/" ${DESTINATION}
+      sed -i -e "s/ChangeMePSK/${WIRELESS_PSK_LIST[$i]}/" ${DESTINATION}
+
+   done
 
 fi

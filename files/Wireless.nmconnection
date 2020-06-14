@@ -1,6 +1,5 @@
 [connection]
 id=ChangeMeSSID
-uuid=cc23de52-250e-429d-9efd-7c5dff09dc90
 type=wifi
 autoconnect-priority=5
 permissions=
