@@ -27,6 +27,9 @@ else
    print_msg "Device ${LOOP_DEV}p2 already exists, using it"
 fi
 
+# update the partitions
+partprobe ${LOOP_DEV}
+
 # mount the partitions
 mount ${LOOP_DEV}p2 image
 mount ${LOOP_DEV}p1 image/boot
